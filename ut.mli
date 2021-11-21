@@ -20,6 +20,8 @@ module Delim = Delim
 module Coord = Coord
 module Useq = Useq
 module Prime = Prime
+module Math = Math
+module Fasta = Fasta
 
 (* For AoC 2020 *)
 module Graph = Graph
