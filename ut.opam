@@ -1,0 +1,12 @@
+opam-version: "2.0"
+name: "ut"
+version: "0.1"
+synopsis: "Utilities for problem-solving"
+maintainer: "Hyeonung Baek <wiserlix@gmail.com>"
+authors: "Hyeonung Baek <wiserlix@gmail.com>"
+depends: [ "ocaml" "dune" ]
+build: [
+    [ "dune" "build" "-p" name "-j" jobs ]
+]
+homepage: "github.com/wiserlix"
+bug-reports: "github.com/wiserlix"
