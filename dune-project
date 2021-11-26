@@ -1,1 +1,14 @@
 (lang dune 2.9)
+(name ut)
+(version 0.1)
+(generate_opam_files true)
+(license MIT)
+(maintainers "Hyeonung Baek <wiserlix@gmail.com>")
+(authors "Hyeonung Baek <wiserlix@gmail.com>")
+(homepage "github.com/wiserlix/ut")
+(bug_reports "github.com/wiserlix/ut/issues")
+
+(package
+  (name ut)
+  (synopsis "Utilities for problem-solving")
+  (depends (ocaml (>= 4.12)) (dune (>= 2.9))))
