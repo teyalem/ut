@@ -1,9 +1,11 @@
 (** Utilities for Problem-Solving *)
 
+(** {0 Functions} *)
+
 (** [take n xs] takes n elements from xs. *)
 val take : int -> 'a list -> 'a list
 
-(** [rev_array arr] returns reverse array. obsolete in 4.14 *)
+(** [rev_array arr] returns reversed array. obsolete in 4.14 *)
 val rev_array : 'a array -> 'a array
 
 (** [sum ns] returns sum of all elements in ns. *)
@@ -17,7 +19,8 @@ val starts_with : string -> string -> bool
  * sorted beforehand. *)
 val group_count: 'a list -> ('a * int) list
 
-(* general utilities *)
+
+(** {0 Modules } *)
 
 module IO = Io (** quick I/O operations. *)
 
@@ -35,7 +38,7 @@ module Math = Math (** Math functions (especially modular things) *)
 
 module Fasta = Fasta (** FASTA Parser *)
 
-(* For AoC 2020 *)
+(** {1 Modules for AoC 2020 } *)
 
 module Graph = Graph (** Graph *)
 
@@ -49,14 +52,14 @@ module CellularAutomata = Cellautomata
 (** 2D Matrix Board for CellularAutomata module *)
 module BlockBoard = Blockboard
 
-(* For Aoc 2019 *)
+(** {1 Modules for Aoc 2019 } *)
 
 module IntCode = Intcode (** full-featured Intcode VM *)
 
 (** Sparse representation of Block module *)
 module SparseBlock = Sparseblock
 
-(* types *)
+(** {1 Type aliases } *)
 
 type graph = Graph.t (** alias of Graph.t *) 
 
