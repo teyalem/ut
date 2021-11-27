@@ -1,23 +1,17 @@
-(* array of bits *)
+type t = int ref
 
-(* bits. 0 is lst and len - 1 is mst. *)
-type t = int array
+let get bs i = (!bs lsr i) land 0x1
 
-let get bs i = bs.(i)
-let set bs i n = bs.(i) <- n
+let set bs i n =
+  if n = 0 || n = 1 then
+    let mask = 0x1 lsl i in
+    bs := (if n = 0
+           then !bs land lnot mask
+           else !bs lor mask)
+  else
+    raise (Invalid_argument "Bitarray.set")
 
-let of_int n =
-  let rec inner n =
-    if n = 0 then assert false
-    else if n = 1 then [1]
-    else
-      (n mod 2) :: (inner (n/2))
-  in
-  let bits = inner n |> Array.of_list in
-  Array.init 36
-    (fun i -> match bits.(i) with
-       | b -> b
-       | exception Invalid_argument _ -> 0)
+let copy bs = ref !bs
 
-let to_int bs =
-  Array.fold_right (fun n p -> p * 2 + n) bs 0
+let of_int = ref
+let to_int = (!)
