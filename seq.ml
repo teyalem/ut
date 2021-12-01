@@ -1,5 +1,5 @@
-(* Sequence Utilities *)
-open Seq
+(* Sequence Utilities for Stdlib.Seq *)
+include Stdlib.Seq
 
 (* Properties *)
 

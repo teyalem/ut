@@ -1,5 +1,5 @@
 (* Sequence Utilities *)
-open Seq
+include module type of Stdlib.Seq
 
 (* Properties *)
 val nth_opt: int -> 'a t -> 'a option
