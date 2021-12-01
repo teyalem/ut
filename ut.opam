@@ -5,11 +5,11 @@ synopsis: "Utilities for problem-solving"
 maintainer: ["Hyeonung Baek <wiserlix@gmail.com>"]
 authors: ["Hyeonung Baek <wiserlix@gmail.com>"]
 license: "MIT"
-homepage: "github.com/wiserlix/ut"
-bug-reports: "github.com/wiserlix/ut/issues"
+homepage: "https://github.com/wiserlix/ut"
+bug-reports: "https://github.com/wiserlix/ut/issues"
 depends: [
+  "dune" {>= "2.9"}
   "ocaml" {>= "4.12"}
-  "dune" {>= "2.9" & >= "2.9"}
   "odoc" {with-doc}
 ]
 build: [
