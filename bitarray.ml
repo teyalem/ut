@@ -9,7 +9,7 @@ let set bs i n =
            then !bs land lnot mask
            else !bs lor mask)
   else
-    raise (Invalid_argument "Bitarray.set")
+    invalid_arg "Bitarray.set"
 
 let copy bs = ref !bs
 

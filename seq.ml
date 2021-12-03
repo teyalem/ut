@@ -87,16 +87,15 @@ let rec accumulate n seq () =
   | Nil -> Cons (n, empty)
   | Cons (x, f) -> Cons (n, accumulate (n+x) f)
 
-(* Returns a sequence over all contiguous windows of length size. The windows
- * overlap. If the slice is shorter than size, the iterator returns no values.
- * (Copied from rust std::slice::windows) *)
-let rec windows size seq () =
-  match seq () with
-  | Nil -> raise (Invalid_argument "slice")
-  | Cons (_, f) ->
-    if length seq < size
-    then Nil
-    else Cons (take size seq, windows size f)
+let rec windows size seq =
+  if size = 0 then invalid_arg "Seq.windows"
+  else (fun () ->
+    match seq () with
+    | Nil -> Nil
+    | Cons (_, f) ->
+      if length seq < size
+      then Nil
+      else Cons (take size seq, windows size f))
 
 (* return a sequence of sequence that [ seq; drop 1 seq; drop 2 seq; ... ] as a sequence. *)
 let rec trail seq () =

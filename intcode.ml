@@ -169,7 +169,7 @@ let step m =
     offset_pc m 2
 
   | 99 -> m.state <- Halt (* Program Termination *)
-  | _ -> raise (Invalid_argument "step")
+  | _ -> invalid_arg "Intcode.step"
 
 let rec run m =
   m.state <- Running; (* resume machine *)
