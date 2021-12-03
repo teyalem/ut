@@ -39,7 +39,6 @@ module IO = Io
 module Fasta = Fasta
 module Range = Range
 module Delim = Delim
-module Coord = Coord
 module Seq = Seq
 module Prime = Prime
 module Math = Math

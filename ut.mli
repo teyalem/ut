@@ -28,8 +28,6 @@ module Range = Range (** range *)
 
 module Delim = Delim (** CSV Parser *) 
 
-module Coord = Coord (** Coordinates *)
-
 module Seq = Seq (** Utility for Seq module *)
 
 module Prime = Prime (** Prime utilities *)
