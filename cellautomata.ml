@@ -63,13 +63,13 @@ struct
 
     let updates = ref [] in (* update list *)
     let collect_update pos elt =
-        let neighs = neighbors board pos in
-        let next_elt = next neighs elt in
+      let neighs = neighbors board pos in
+      let next_elt = next neighs elt in
 
-        (* update only if the element is changed *)
-        if next_elt <> elt
-        then updates := (pos, next_elt) :: !updates
-        else ()
+      (* update only if the element is changed *)
+      if next_elt <> elt
+      then updates := (pos, next_elt) :: !updates
+      else ()
     in
 
     B.iteri_cell collect_update board;

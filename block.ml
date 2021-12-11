@@ -15,6 +15,7 @@ module type S = sig
   type elt
   type t
 
+  (** [make dimx dimy] *)
   val make: int -> int -> t
 
   val get: t -> int -> int -> elt
@@ -27,7 +28,6 @@ module type S = sig
 
   val copy: t -> t
 
-  (* iterations *)
   val iteri: (int -> int -> elt -> unit) -> t -> unit
 
   (* print and parse *)
@@ -35,7 +35,6 @@ module type S = sig
   val parse: string list -> t
   val parse_raw: int -> int -> string -> t * string
 
-  (* count occurences of an element *)
   val count: (elt -> bool) -> t -> int
   val count_occur: elt -> t -> int
 
@@ -44,16 +43,13 @@ module type S = sig
   val to_matrix: t -> elt array array
 end
 
-module Make(Sign: SignType)
-  : (S with type elt = Sign.t) =
+module Make(Sign: SignType) : (S with type elt = Sign.t) =
 struct
   type elt = Sign.t
   type t = elt array array
 
-  (* make empty block *)
   let make dimx dimy = Array.make_matrix dimx dimy Sign.default
 
-  (* get/set a position of block *)
   let get block x y =
     try block.(x).(y)
     with _ -> failwith "Block.get"
@@ -62,8 +58,8 @@ struct
     try block.(x).(y) <- n
     with _ -> failwith "Block.set"
 
-  let dimx block = Array.length block
-  let dimy block = Array.length block.(0)
+  let[@inline] dimx block = Array.length block
+  let[@inline] dimy block = Array.length block.(0)
 
   let sub block (sx, sy) (lenx, leny) =
     let open Array in
@@ -74,31 +70,36 @@ struct
 
   (* iterate through block *)
   let iteri f block =
-    for x = 0 to Array.length block - 1 do
-      for y = 0 to Array.length block.(0) - 1 do
+    for x = 0 to dimx block - 1 do
+      for y = 0 to dimy block - 1 do
         f x y (get block x y)
       done
     done
 
   (* debug: print block *)
   let print block =
+    let pc = Printf.printf "%c" in
+    let pn () = Printf.printf "\n" in
     for y = 0 to dimy block - 1 do
       for x = 0 to dimx block - 1 do
-        get block x y |> Sign.to_char |> print_char
+        pc @@ Sign.to_char @@ get block x y 
       done;
-      print_newline ()
+      pn ()
     done;
-    print_newline ()
+    pn ()
 
   (* parse a matrix *)
   let parse sl =
+    let open List in
     (* converting string list to char list list *)
-    let sl = List.map (fun s -> String.to_seq s |> List.of_seq) sl in
-    let dimx = List.(length (hd sl))
-    and dimy = List.length sl in
+    let sl = map (fun s -> String.to_seq s |> of_seq) sl in
+    let dimx = length @@ hd sl and dimy = length sl in
     let mat = make dimx dimy in
-    sl |> List.iteri (fun y s ->
-         s |> List.iteri (fun x c -> set mat x y (Sign.of_char c)));
+    iteri
+      (fun y s -> iteri
+          (fun x c -> set mat x y @@ Sign.of_char c)
+          s)
+      sl;
     mat
 
   let parse_raw dimx dimy str =
@@ -118,15 +119,14 @@ struct
 
   let count f block =
     let count = ref 0 in
-    iteri (fun _ _ c ->
-        if f c then incr count else ()) block;
+    iteri (fun _ _ c -> if f c then incr count) block;
     !count
 
   (* count occurence of element t *)
   let count_occur t block =
     count ((=) t) block
 
-  let of_matrix mat = mat
-  let to_matrix b = b
+  let of_matrix = Fun.id
+  let to_matrix = Fun.id
 
 end

@@ -21,9 +21,9 @@ module Position2D = struct
 end
 
 module Make (B: Block.S)
-: (BoardType with type t = B.t
-              and type elt = B.elt
-              and type pos = int * int) =
+  : (BoardType with type t = B.t
+                and type elt = B.elt
+                and type pos = int * int) =
 struct
   type t = B.t
   type elt = B.elt
