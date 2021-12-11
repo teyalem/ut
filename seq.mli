@@ -1,26 +1,24 @@
-(** {0 Sequence Utilities } *)
+(** {1 Sequence Utilities } *)
 
 (** This module is an extension of Stdlib.Seq module. It contains
- * useful functions that Ocaml 4.13 or less do not contain.
- * NOTE: this module is not needed after Ocaml 4.14.
- *)
+    useful functions that Ocaml 4.13 or less do not contain.
+    NOTE: this module is not needed after Ocaml 4.14. *)
 
-(** Overlap *)
 include module type of Stdlib.Seq
 
 (** [nth_opt n seq] returns Some (nth element of seq). If seq is shorter than
- * n, it returns None. *)
+    n, it returns None. *)
 val nth_opt: int -> 'a t -> 'a option
 
 (** [nth n seq] returns nth element of seq. If seq is shorter than n, it
- * raises Not_found exception. *)
+    raises Not_found exception. *)
 val nth: int -> 'a t -> 'a
 
 (** [length seq] returns the length of seq. *)
 val length: 'a t -> int
 
 (** [init n f] is the same as Seq.cons (f 0) @@ Seq.cons (f 1) ...
- * Seq.Nil. *)
+    Seq.Nil. *)
 val init: int -> (int -> 'a) -> 'a t
 
 (** [take n seq] returns a sequence that has first n elements of seq. *)
@@ -31,7 +29,7 @@ val take_while: ('a -> bool) -> 'a t -> 'a t
 val map_tail: ('a -> 'a t -> 'a t) -> 'a t -> 'a t
 
 (** [repeat_each n seq] returns a sequence that every elements in seq
- * repeats n times.*)
+    repeats n times.*)
 val repeat_each: int -> 'a t -> 'a t
 
 (** [repeat n seq] repeat seq n times. *)
@@ -41,20 +39,20 @@ val repeat: int -> 'a t -> 'a t
 val cycle: 'a t -> 'a t
 
 (** accumulate n seq returns a sequence A that
- * A(0) = n
- * A(i) = \sum_{k=0}^{i} A(k).
- *)
+    A(0) = n
+    A(i) = \sum_{k=0}^{i} A(k).  *)
 val accumulate: int -> int t -> int t
 
 (** [windows n seq] returns a sequence over all contiguous windows of
- * length n. The windows overlap. If the slice is shorter than n, the
- * sequence returns Seq.Nil.
- *
- * {i(comment copied from rust std::slice::windows)} *)
+    length n. The windows overlap. If the slice is shorter than n, the
+    sequence returns Seq.Nil.
+    If n is 0, it raises Invalid_argument.
+
+    {i(comment copied from rust std::slice::windows)} *)
 val windows: int -> 'a t -> 'a t t
 
 (** [trail seq] returns a sequence of sequence such that [ seq; drop 1
- * seq; drop 2 seq; ... ] as a sequence. *)
+    seq; drop 2 seq; ... ] as a sequence. *)
 val trail: 'a t -> 'a t t
 
 (** [for_all f seq] returns [true] when all elements of seq meet the
