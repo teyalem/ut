@@ -36,6 +36,8 @@ module Math = Math (** Math functions (especially modular things) *)
 
 module Fasta = Fasta (** FASTA Parser *)
 
+module Mat = Mat (** Matrix, i.e. 2D Array *)
+
 (** {1 Modules for AoC 2020 } *)
 
 module Graph = Graph (** Graph *)
