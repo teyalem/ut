@@ -15,77 +15,57 @@ module type S = sig
   type elt
   type t
 
-  (** [make dimx dimy] *)
-  val make: int -> int -> t
+  val make : int -> int -> t
 
-  val get: t -> int -> int -> elt
-  val set: t -> int -> int -> elt -> unit
+  val get : t -> int -> int -> elt
+  val set : t -> int -> int -> elt -> unit
 
-  val dimx: t -> int
-  val dimy: t -> int
+  val dimx : t -> int
+  val dimy : t -> int
 
-  val sub: t -> int * int -> int * int -> t
+  val sub : t -> int * int -> int * int -> t
+  val copy : t -> t
 
-  val copy: t -> t
-
-  val iteri: (int -> int -> elt -> unit) -> t -> unit
+  val iteri : (int -> int -> elt -> unit) -> t -> unit
 
   (* print and parse *)
-  val print: t -> unit
-  val parse: string list -> t
-  val parse_raw: int -> int -> string -> t * string
+  val print : t -> unit
+  val parse : string list -> t
+  val parse_raw : int -> int -> string -> t * string
 
-  val count: (elt -> bool) -> t -> int
-  val count_occur: elt -> t -> int
+  val count : (elt -> bool) -> t -> int
+  val count_occur : elt -> t -> int
 
   (* Conversions *)
-  val of_matrix: elt array array -> t
-  val to_matrix: t -> elt array array
+  val of_matrix : elt Mat.t -> t
+  val to_matrix : t -> elt Mat.t
 end
 
-module Make(Sign: SignType) : (S with type elt = Sign.t) =
+module Make(Sign: SignType) :
+  (S with type elt = Sign.t and type t = Sign.t Mat.t) =
 struct
+
   type elt = Sign.t
-  type t = elt array array
+  type t = elt Mat.t
 
-  let make dimx dimy = Array.make_matrix dimx dimy Sign.default
+  let make dimx dimy = Mat.make dimx dimy Sign.default
 
-  let get block x y =
-    try block.(x).(y)
-    with _ -> failwith "Block.get"
+  let get = Mat.get
+  let set = Mat.set
 
-  let set block x y n =
-    try block.(x).(y) <- n
-    with _ -> failwith "Block.set"
+  let dimx = Mat.dimx
+  let dimy = Mat.dimy
 
-  let[@inline] dimx block = Array.length block
-  let[@inline] dimy block = Array.length block.(0)
+  let sub = Mat.sub
+  let copy = Mat.copy
 
-  let sub block (sx, sy) (lenx, leny) =
-    let open Array in
-    sub block sx lenx
-    |> map (fun a -> sub a sy leny)
-
-  let copy block = Array.(map copy block)
-
-  (* iterate through block *)
-  let iteri f block =
-    for x = 0 to dimx block - 1 do
-      for y = 0 to dimy block - 1 do
-        f x y (get block x y)
-      done
-    done
+  let iteri = Mat.iteri
 
   (* debug: print block *)
   let print block =
-    let pc = Printf.printf "%c" in
+    let pc e = Printf.printf "%c" @@ Sign.to_char e in
     let pn () = Printf.printf "\n" in
-    for y = 0 to dimy block - 1 do
-      for x = 0 to dimx block - 1 do
-        pc @@ Sign.to_char @@ get block x y 
-      done;
-      pn ()
-    done;
+    Mat.iter_row pc pn block;
     pn ()
 
   (* parse a matrix *)
@@ -128,5 +108,4 @@ struct
 
   let of_matrix = Fun.id
   let to_matrix = Fun.id
-
 end

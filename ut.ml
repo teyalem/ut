@@ -42,6 +42,7 @@ module Delim = Delim
 module Seq = Seq
 module Prime = Prime
 module Math = Math
+module Mat = Mat
 
 (* For AoC 2020 *)
 module Graph = Graph
