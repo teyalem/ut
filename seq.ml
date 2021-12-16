@@ -41,6 +41,15 @@ let rec take n seq () =
     | Nil -> Nil
     | Cons (x, f) -> Cons (x, take (n-1) f)
 
+(* take first n elements from a sequence. *)
+let rec drop n seq =
+  if n = 0
+  then seq
+  else
+    match seq () with
+    | Nil -> empty
+    | Cons (_, f) -> drop (n-1) f
+
 (* take elements from a sequence that meets the predicate. *)
 let rec take_while pred seq () =
   match seq () with

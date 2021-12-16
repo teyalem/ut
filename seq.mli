@@ -24,6 +24,8 @@ val init: int -> (int -> 'a) -> 'a t
 (** [take n seq] returns a sequence that has first n elements of seq. *)
 val take: int -> 'a t -> 'a t
 
+val drop: int -> 'a t -> 'a t
+
 val take_while: ('a -> bool) -> 'a t -> 'a t
 
 val map_tail: ('a -> 'a t -> 'a t) -> 'a t -> 'a t
