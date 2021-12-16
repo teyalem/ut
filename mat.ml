@@ -32,19 +32,19 @@ let transpose mat =
 
 let concat_horiz mats =
   assert(mats <> []);
-  let d = dimx @@ List.hd mats in
-  assert(List.for_all (fun m -> dimx m = d) mats);
+  let d = dimy @@ List.hd mats in
+  assert(List.for_all (fun m -> dimy m = d) mats);
   Array.concat mats
 
 let concat_vert mats =
   assert(mats <> []);
-  let d = dimy @@ List.hd mats in
-  assert(List.for_all (fun m -> dimy m = d) mats);
+  let d = dimx @@ List.hd mats in
+  assert(List.for_all (fun m -> dimx m = d) mats);
   let open Array in
   init d (fun i -> List.map (Fun.flip get i) mats |> concat)
 
 let concat mats =
-  List.map concat_vert mats |> concat_horiz
+  List.map concat_horiz mats |> concat_vert
 
 let map f mat =
   Array.(map (map f) mat)
