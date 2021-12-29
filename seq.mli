@@ -29,8 +29,6 @@ val drop: int -> 'a t -> 'a t
 
 val take_while: ('a -> bool) -> 'a t -> 'a t
 
-val map_tail: ('a -> 'a t -> 'a t) -> 'a t -> 'a t
-
 (** [repeat_each n seq] returns a sequence that every elements in seq
     repeats n times.*)
 val repeat_each: int -> 'a t -> 'a t

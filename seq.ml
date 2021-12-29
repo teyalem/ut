@@ -59,13 +59,6 @@ let rec take_while pred seq () =
     then Cons (x, take_while pred f)
     else Nil
 
-(* Iterators *)
-
-let rec map_tail f seq () =
-  match seq () with
-  | Nil -> Nil
-  | Cons (x, tl) -> Cons (x, map_tail f @@ f x tl)
-
 (* repeat a sequence n times. *)
 let rec repeat n seq () =
   if n = 0
