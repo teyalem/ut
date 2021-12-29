@@ -37,7 +37,6 @@ let group_count ns =
 (* Common modules *)
 module IO = Io
 module Fasta = Fasta
-module Range = Range
 module Delim = Delim
 module Seq = Seq
 module Prime = Prime
@@ -57,4 +56,3 @@ module SparseBlock = Sparseblock
 
 (* types *)
 type graph = Graph.t
-type range = Range.t

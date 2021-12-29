@@ -24,7 +24,6 @@ val group_count: 'a list -> ('a * int) list
 
 module IO = Io (** quick I/O operations. *)
 
-module Range = Range (** range *)
 
 module Delim = Delim (** CSV Parser *) 
 
@@ -62,5 +61,3 @@ module SparseBlock = Sparseblock
 (** {1 Type aliases } *)
 
 type graph = Graph.t (** alias of Graph.t *) 
-
-type range = Range.t (** alias of Range.t *)
