@@ -6,16 +6,17 @@ let rec take n = function
     if n = 0 then []
     else x :: take (n-1) xs
 
-let rev_array arr =
-  Array.to_list arr
-  |> List.rev
-  |> Array.of_list
+let rec drop i = function
+  | [] -> []
+  | x :: xs ->
+    if i = 0 then x :: xs
+    else drop (i-1) xs
 
-let sum l = List.fold_left Int.add 0 l
+let sum ns =
+  List.fold_left Int.add 0 ns
 
-let starts_with pat str =
-  let pat = Str.regexp ("^" ^ pat) in
-  Str.string_match pat str 0
+let product ns =
+  List.fold_left Int.mul 1 ns
 
 let group_count ns =
   List.fold_left

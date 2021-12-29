@@ -5,14 +5,12 @@
 (** [take n xs] takes n elements from xs. *)
 val take : int -> 'a list -> 'a list
 
-(** [rev_array arr] returns reversed array. obsolete in 4.14 *)
-val rev_array : 'a array -> 'a array
+val drop : int -> 'a list -> 'a list
 
 (** [sum ns] returns sum of all elements in ns. *)
 val sum : int list -> int
 
-(** [starts_with pat str] checks that string str starts with pattern pat. *)
-val starts_with : string -> string -> bool
+val product : int list -> int
 
 (** [group_count xs] returns (element, number) list, where element is in
  * xs and number is the number of the element in xs. List must be
