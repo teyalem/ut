@@ -8,17 +8,33 @@ let init dimx dimy f =
   Array.init dimx
     (fun x -> Array.init dimy (fun y -> f x y))
 
-let get mat x y =
-  mat.(x).(y)
-
-let set mat x y v =
-  mat.(x).(y) <- v
-
 let[@inline] dimx mat = Array.length mat
 
 let[@inline] dimy mat = Array.length mat.(0)
 
 let[@inline] dim mat = dimx mat, dimy mat
+
+let[@inline] get mat x y =
+  mat.(x).(y)
+
+let[@inline] set mat x y v =
+  mat.(x).(y) <- v
+
+let get_row mat y =
+  Array.init (dimx mat) (fun i -> mat.(i).(y))
+
+let get_col mat x =
+  Array.copy mat.(x)
+
+let set_row mat y v =
+  assert (dimx mat = Array.length v);
+  for i = 0 to dimx mat - 1 do
+    mat.(i).(y) <- v.(i)
+  done
+
+let set_col mat x v =
+  assert (dimy mat = Array.length v);
+  mat.(x) <- Array.copy v
 
 let copy mat =
   Array.(map copy mat)
@@ -70,6 +86,10 @@ let iter_col f eocf mat =
   Array.iter
     (fun l -> Array.iter f l; eocf ())
     mat
+
+let fold f x mat =
+  let open Array in
+  fold_left (fun p v -> fold_left f p v) x mat
 
 let of_seq seq =
   Seq.map Array.of_seq seq |> Array.of_seq
