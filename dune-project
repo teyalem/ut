@@ -1,6 +1,6 @@
 (lang dune 2.9)
 (name ut)
-(version 0.1)
+(version 0.3)
 (generate_opam_files true)
 (license MIT)
 (maintainers "Hyeonung Baek <wiserlix@gmail.com>")
