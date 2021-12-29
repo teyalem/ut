@@ -4,7 +4,7 @@ let rec input_lines (ic: in_channel) =
   | line -> line::(input_lines ic)
   | exception End_of_file -> []
 
-(* NOTE: input_all function introduced in Ocaml 4.14. *)
+(* NOTE: input_all function will be introduced in Ocaml 4.14. *)
 let input_all (file: in_channel) =
   really_input_string file (in_channel_length file)
 

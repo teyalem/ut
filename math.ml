@@ -14,7 +14,7 @@ let mod_inv a b =
   if a*x + b*y = 1 then Some x else None
 
 (* Chinese Reminder Theorem *)
-(* Poorly implemented *)
+(* NOTE: Poorly implemented *)
 let crt cong =
   let open List in
   let ml, al = split cong in

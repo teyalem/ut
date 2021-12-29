@@ -1,6 +1,5 @@
 (** Array of bits *)
 
-(** type of Bitarray *)
 type t
 
 (** [get bs i] returns {i ith} bits from LSB of bs. *)

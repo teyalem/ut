@@ -2,7 +2,8 @@
 
 (** This module is an extension of Stdlib.Seq module. It contains
     useful functions that Ocaml 4.13 or less do not contain.
-    NOTE: this module is not needed after Ocaml 4.14. *)
+    NOTE: many functions of this module are going to be included in
+    stdlib in Ocaml 4.14. *)
 
 include module type of Stdlib.Seq
 
