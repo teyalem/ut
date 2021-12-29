@@ -15,6 +15,8 @@ type t = { mutable pc: int; (* instruction pointer *)
            mutable mem: int array; (* program memory *)
            mutable ex_mem: (int, int) Hashtbl.t; } (* extended memory *)
 
+type program = int list
+
 (* make machine and load program *)
 let load ns = { pc = 0;
                 rel_base = 0;
@@ -94,10 +96,10 @@ let fetch m = m.mem.(m.pc)
 
 (* decode instruction *)
 let decode inst =
-  let op, inst = inst mod 100 , inst/100 in
+  let op, inst = inst mod 100 , inst / 100 in
   let m1 = inst mod 10 in
-  let m2 = inst mod 100 / 10 in
-  let m3 = inst mod 1000/ 100 in
+  let m2 = inst mod 100  / 10 in
+  let m3 = inst mod 1000 / 100 in
   op, m1, m2, m3
 
 (* load integer from memory *)
@@ -175,11 +177,6 @@ let rec run m =
   m.state <- Running; (* resume machine *)
 
   while m.state = Running do
-    (* debug *)
-    (*
-    Printf.printf "%d %d %d %d\n" (get m m.pc) (load_i m 1 1) (load_i m 1 2) (load_i m 1 3);
-    ignore @@ read_line ();
-       *)
     step m;
 
     if m.interact && not @@ is_output_empty m
@@ -190,7 +187,6 @@ let rec run m =
           m.state <- Halt;
           Queue.push output m.output
         end
-    else ()
   done;
 
   if m.interact && m.state = Paused
@@ -200,7 +196,6 @@ let rec run m =
     |> String.iter (fun c -> set_input m @@ int_of_char c);
     run m
   end
-  else ()
 
 (* parse intcode *)
 let parse_code str =
