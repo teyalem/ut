@@ -7,5 +7,6 @@ puzzles. For more information, check inner documentation by running
 ## TODO
 
 - add functions to SparseBlock
-- add Pathfinding module
-- categorize AoC puzzles
+- add Pathfinding module (BFS, DFS, Dijkstra...)
+- categorize AoC puzzles to crystalize algos more
+- split IntCode module
