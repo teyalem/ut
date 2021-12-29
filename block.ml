@@ -68,38 +68,31 @@ struct
     Mat.iter_row pc pn block;
     pn ()
 
-  (* parse a matrix *)
   let parse sl =
-    let open List in
-    (* converting string list to char list list *)
-    let sl = map (fun s -> String.to_seq s |> of_seq) sl in
-    let dimx = length @@ hd sl and dimy = length sl in
-    let mat = make dimx dimy in
-    iteri
-      (fun y s -> iteri
-          (fun x c -> set mat x y @@ Sign.of_char c)
-          s)
-      sl;
-    mat
+    List.to_seq sl
+    |> Seq.map (fun s -> String.to_seq s)
+    |> Seq.map (Seq.map Sign.of_char)
+    |> Mat.of_seq
 
   let parse_raw dimx dimy str =
-    let seq = ref @@ String.to_seq str
-    and block = make dimx dimy in
-    for y = 0 to dimy - 1 do
-      for x = 0 to dimx - 1 do
-        let c, s = match !seq () with
-          | Seq.Nil -> Sign.default, Seq.empty
-          | Seq.Cons (c, f) -> Sign.of_char c, f
-        in
-        seq := s;
-        set block x y c
-      done
-    done;
-    block, String.of_seq !seq
+    let open Seq in
+    let seq = String.to_seq str in
+    let rec split n seq : 'a Seq.t Seq.t =
+      match seq () with
+      | Nil -> empty
+      | _ -> cons (take n seq) (split n @@ drop n seq)
+    in
+    let block =
+      take (dimx*dimy) seq
+      |> split dimx
+      |> map (map Sign.of_char)
+      |> Mat.of_seq
+    in
+    block, String.of_seq @@ drop (dimx*dimy) seq
 
   let count f block =
     let count = ref 0 in
-    iteri (fun _ _ c -> if f c then incr count) block;
+    Mat.iter (fun c -> if f c then incr count) block;
     !count
 
   (* count occurence of element t *)
