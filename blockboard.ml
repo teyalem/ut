@@ -2,6 +2,14 @@
 open Block
 open Cellautomata
 
+let neighbor_positions (x, y) =
+  let all_neighs =
+    [ -1, -1; 0, -1; 1, -1;
+      -1,  0;        1,  0;
+      -1,  1; 0,  1; 1,  1 ]
+  in
+  List.map (fun (dx, dy) -> x + dx, y + dy) all_neighs
+
 module type BoardType = sig
   include Block.S
   include HoneycombType
@@ -21,14 +29,6 @@ module Make (Cell : CellType)
 struct
   include Block.Make(Cell)
   type pos = int * int
-
-  let neighbor_positions (x, y) =
-    let all_neighs =
-      [ -1, -1; 0, -1; 1, -1;
-        -1,  0;        1,  0;
-        -1,  1; 0,  1; 1,  1 ]
-    in
-    List.map (fun (dx, dy) -> x + dx, y + dy) all_neighs
 
   let next = Cell.next
 
