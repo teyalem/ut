@@ -1,14 +1,26 @@
+(* 2D board that can be used for Cellautomata.make_automata *)
 open Block
 open Cellautomata
 
-module type SignCellType = sig
-  include SignType
-  include CellType with type t := t
+module type BoardType = sig
+  include Block.S
+  include HoneycombType
+    with type elt := elt
+     and type pos = int * int
+     and type t := t
 end
 
-(* 2D Position *)
-module Position2D = struct
-  type t = int * int
+module type CellType = sig
+  include SignType
+  val next : t list -> t -> t
+end
+
+module Make (Cell : CellType)
+  : (BoardType with type elt = Cell.t
+                and type pos = int * int) =
+struct
+  include Block.Make(Cell)
+  type pos = int * int
 
   let neighbor_positions (x, y) =
     let all_neighs =
@@ -18,23 +30,18 @@ module Position2D = struct
     in
     List.map (fun (dx, dy) -> x + dx, y + dy) all_neighs
 
-end
+  let next = Cell.next
 
-module Make (B: Block.S)
-  : (BoardType with type t = B.t
-                and type elt = B.elt
-                and type pos = int * int) =
-struct
-  type t = B.t
-  type elt = B.elt
-  type pos = int * int
-
-  let get_cell b (x, y) =
-    try Some (B.get b x y)
+  let get b (x, y) =
+    try Some (get b x y)
     with _ -> None
 
-  let set_cell b (x, y) elt = B.set b x y elt
+  let set b (x, y) elt = set b x y elt
 
-  let iteri_cell f b =
-    B.iteri (fun x y c -> f (x, y) c) b
+  let neighbors b pos =
+    neighbor_positions pos
+    |> List.filter_map (get b)
+
+  let iteri f b =
+    iteri (fun x y c -> f (x, y) c) b
 end
