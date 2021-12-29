@@ -52,24 +52,24 @@ let set_interactive m b = m.interact <- b
 
 let is_output_empty m = Queue.is_empty m.output
 
-let set_input m n = Queue.push n m.input
-let get_output m = Queue.pop m.output
+let push_input m n = Queue.push n m.input
+let pop_output m = Queue.pop m.output
 
 (* flush ASCII and return first non-ASCII output *)
-let rec flush_output m =
-  let o = get_output m in
+let rec flush_ascii m =
+  let o = pop_output m in
   if o > 127
   then o
-  else flush_output m
+  else flush_ascii m
 
 let rec collect_output m =
   if is_output_empty m
   then []
-  else get_output m :: collect_output m
+  else pop_output m :: collect_output m
 
 let print_output m =
   while not @@ is_output_empty m do
-    print_char @@ char_of_int @@ get_output m
+    print_char @@ char_of_int @@ pop_output m
   done
 
 (* get/set *)
@@ -181,7 +181,7 @@ let rec run m =
 
     if m.interact && not @@ is_output_empty m
     then
-      let output = get_output m in
+      let output = pop_output m in
       try char_of_int output |> print_char
       with _ -> begin
           m.state <- Halt;
@@ -193,7 +193,7 @@ let rec run m =
   then begin
     read_line ()
     |> (fun s -> s ^ "\n")
-    |> String.iter (fun c -> set_input m @@ int_of_char c);
+    |> String.iter (fun c -> push_input m @@ int_of_char c);
     run m
   end
 
