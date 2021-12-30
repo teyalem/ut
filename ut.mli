@@ -20,8 +20,9 @@ val group_count: 'a list -> ('a * int) list
 
 (** {0 Modules } *)
 
-module IO = Io (** quick I/O operations. *)
+(** {1 Common Modules } *)
 
+module IO = Io (** quick I/O operations. *)
 
 module Delim = Delim (** CSV Parser *) 
 
@@ -31,11 +32,13 @@ module Prime = Prime (** Prime utilities *)
 
 module Math = Math (** Math functions (especially modular things) *)
 
-module Fasta = Fasta (** FASTA Parser *)
-
 module Mat = Mat (** Matrix, i.e. 2D Array *)
 
+module Fasta = Fasta (** FASTA format parser *)
+
 module Heap = Heap
+
+module Pathfind = Pathfind
 
 (** {1 Modules for AoC 2020 } *)
 
@@ -53,11 +56,12 @@ module BlockBoard = Blockboard
 
 (** {1 Modules for Aoc 2019 } *)
 
-module IntCode = Intcode (** full-featured Intcode VM *)
+(** full-featured Intcode VM *)
+module IntCode = Intcode
 
 (** Sparse representation of Block module *)
 module SparseBlock = Sparseblock
 
-(** {1 Type aliases } *)
+(** {0 Type aliases } *)
 
 type graph = Graph.t (** alias of Graph.t *) 
