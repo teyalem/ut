@@ -35,6 +35,8 @@ module Fasta = Fasta (** FASTA Parser *)
 
 module Mat = Mat (** Matrix, i.e. 2D Array *)
 
+module Heap = Heap
+
 (** {1 Modules for AoC 2020 } *)
 
 module Graph = Graph (** Graph *)
