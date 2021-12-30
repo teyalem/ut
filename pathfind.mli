@@ -34,6 +34,8 @@ module type WeightedGraph = sig
   val neighbors : space -> state * data -> (weight * state * data) list
 end
 
+val heap_size : int ref
+
 val dijkstra :
   (module WeightType with type t = 'weight)
   -> (module WeightedGraph with type space = 'space
