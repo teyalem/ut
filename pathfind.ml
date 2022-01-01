@@ -117,7 +117,7 @@ let dijkstra
   in
   let module H = Heap.Make(O) in
   let heap = H.create !heap_size in
-  let visited = Hashtbl.create 100 in
+  let visited = Hashtbl.create !heap_size in
 
   let add s = H.push heap s in
   let rec next () =
