@@ -57,13 +57,16 @@ struct
     set h i (get h j);
     set h j e
 
-  let expand1 h =
+  let realloc h =
     let open Array in
+    let arr = make (2 * length h.data) None in
+    blit h.data 0 arr 0 (length h.data);
+    h.data <- arr
+
+  let expand1 h =
     h.last <- h.last + 1;
-    if h.last >= length h.data then
-      let arr = make (2 * length h.data) None in
-      blit h.data 0 arr 0 (length h.data);
-      h.data <- arr
+    if h.last >= Array.length h.data then
+      realloc h
 
   let shrink1 h =
     h.data.(h.last) <- None;
