@@ -36,6 +36,7 @@ module Mat = Mat (** Matrix, i.e. 2D Array *)
 
 module Fasta = Fasta (** FASTA format parser *)
 
+module Pheap = Pheap
 module Heap = Heap
 
 module Pathfind = Pathfind

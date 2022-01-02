@@ -115,13 +115,14 @@ let dijkstra
     let compare (a, _, _) (b, _, _) = W.compare a b
   end
   in
-  let module H = Heap.Make(O) in
-  let heap = H.create !heap_size in
+  let module H = Pheap.Make(O) in
+  let heap = ref @@ H.create () in
   let visited = Hashtbl.create !heap_size in
 
-  let add s = H.push heap s in
+  let add x = heap := H.insert !heap x in
   let rec next () =
-    let c, s, d = H.pop heap in
+    let c, s, d = H.find_min !heap in
+    heap := H.delete_min !heap;
     if Hashtbl.mem visited s
     then next ()
     else c, s, d
