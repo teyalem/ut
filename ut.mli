@@ -15,8 +15,9 @@ val product : int list -> int
 (** [group_count xs] returns (element, number) list, where element is in
  * xs and number is the number of the element in xs. List must be
  * sorted beforehand. *)
-val group_count: 'a list -> ('a * int) list
+val group_count : 'a list -> ('a * int) list
 
+val sign : int -> int
 
 (** {0 Modules } *)
 

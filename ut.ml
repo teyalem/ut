@@ -35,6 +35,11 @@ let group_count ns =
       | None -> ps
       | Some p -> p::ps)
 
+let sign n =
+  if n < 0 then -1
+  else if n > 0 then 1
+  else 0
+
 (* Common modules *)
 module IO = Io
 module Fasta = Fasta
