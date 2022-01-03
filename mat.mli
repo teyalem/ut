@@ -21,6 +21,8 @@ val dim : 'a t -> int * int
     It raises Invalid_argument if the index is out of bounds. *)
 val get : 'a t -> int -> int -> 'a
 
+val get_opt : 'a t -> int -> int -> 'a option
+
 val set : 'a t -> int -> int -> 'a -> unit
 
 val get_row : 'a t -> int -> 'a array
@@ -57,7 +59,15 @@ val iteri : (int -> int -> 'a -> unit) -> 'a t -> unit
 val iter_row : ('a -> unit) -> (unit -> unit) -> 'a t -> unit
 val iter_col : ('a -> unit) -> (unit -> unit) -> 'a t -> unit
 
-val fold : ('a -> 'b -> 'a) -> 'a -> 'b t -> 'a
+val fold : ?mask:('b -> bool) -> ('a -> 'b -> 'a) -> 'a -> 'b t -> 'a
+
+(* {1 Scanning} *)
+
+val find_opt : ('a -> bool) -> 'a t -> 'a option
+val find_map : ('a -> 'b option) -> 'a t -> 'b option
+
+val exists : ('a -> bool) -> 'a t -> bool
+val for_all : ('a -> bool) -> 'a t -> bool
 
 (** {1 Arrays and Sequences} *)
 

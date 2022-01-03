@@ -17,6 +17,10 @@ let[@inline] dim mat = dimx mat, dimy mat
 let[@inline] get mat x y =
   mat.(x).(y)
 
+let[@inline] get_opt mat x y =
+  try Some (get mat x y)
+  with _ -> None
+
 let[@inline] set mat x y v =
   mat.(x).(y) <- v
 
@@ -87,9 +91,23 @@ let iter_col f eocf mat =
     (fun l -> Array.iter f l; eocf ())
     mat
 
-let fold f x mat =
+let fold ?(mask = Fun.const true) f x mat =
+  let x = ref x in
+  iter (fun a -> if mask a then x := f !x a) mat;
+  !x
+
+let find_opt f mat =
+  Array.(find_map (find_opt f) mat)
+
+let find_map f mat =
   let open Array in
-  fold_left (fun p v -> fold_left f p v) x mat
+  find_map (fun col -> find_map f col) mat
+
+let exists f mat =
+  Array.(exists (exists f) mat)
+
+let for_all f mat =
+  Array.(for_all (for_all f) mat)
 
 let of_seq seq =
   Seq.map Array.of_seq seq |> Array.of_seq
