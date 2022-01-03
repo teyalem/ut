@@ -44,6 +44,7 @@ module Prime = Prime
 module Math = Math
 module Mat = Mat
 module Heap = Heap
+module Pheap = Pheap
 module Pathfind = Pathfind
 
 (* For AoC 2020 *)
