@@ -77,20 +77,22 @@ let collect
   ~start =
   let pool = P.create () in
   let visited = Hashtbl.create 100 in
-  let rec next () =
-    let s, d = P.take pool in
-    if Hashtbl.mem visited s then next () else s, d
-  in
   let ds = ref [] in
 
-  let rec aux (s, d) =
-    Hashtbl.add visited s true;
-    if S.is_end space (s, d)
-    then ds := d :: !ds
-    else S.neighbors space (s, d) |> List.iter (P.add pool);
-    if not @@ P.is_empty pool then aux @@ next ()
+  let rec aux () =
+    if P.is_empty pool then !ds
+    else begin
+      let s, d = P.take pool in
+      if not @@ Hashtbl.mem visited s then begin
+        Hashtbl.add visited s true;
+        if S.is_end space (s, d)
+        then ds := d :: !ds
+        else S.neighbors space (s, d) |> List.iter (P.add pool)
+      end;
+      aux ()
+    end
   in
-  aux (start, S.data_id); !ds
+  P.add pool (start, S.data_id); aux ()
 
 type ('space, 'state, 'data, 'out) pathfind_alg =
   (module StateSpace
