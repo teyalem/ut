@@ -5,7 +5,7 @@ module type StateSpace = sig
   type data
 
   val data_id : data
-  val is_end : space -> state -> bool
+  val is_end : space -> state * data -> bool
   val neighbors : space -> state * data -> (state * data) list
 end
 
@@ -15,6 +15,9 @@ module type PoolType = sig
 
   (* create a new pool *)
   val create : unit -> 'a pool
+
+  (* check pool is empty *)
+  val is_empty : 'a pool -> bool
 
   (* add state into a pool *)
   val add : 'a pool -> 'a -> unit
@@ -27,6 +30,7 @@ module StackPool : PoolType = struct
   type 'a pool = 'a Stack.t
 
   let create = Stack.create
+  let is_empty = Stack.is_empty
   let add pool x = Stack.push x pool
   let take = Stack.pop
 end
@@ -35,6 +39,7 @@ module QueuePool : PoolType = struct
   type 'a pool = 'a Queue.t
 
   let create = Queue.create
+  let is_empty = Queue.is_empty
   let add pool x = Queue.push x pool
   let take = Queue.pop
 end
@@ -54,10 +59,8 @@ let search
   in
 
   let rec aux (s, d) =
-    (* currently, it will stop after first viable end state is found.
-     * TODO: add search_all function that collect all end states. *)
     Hashtbl.add visited s true;
-    if S.is_end space s then d
+    if S.is_end space (s, d) then d
     else begin
       S.neighbors space (s, d) |> List.iter (P.add pool);
       aux @@ next ()
@@ -65,14 +68,38 @@ let search
   in
   aux (start, S.data_id)
 
-type ('space, 'state, 'data) pathfind_alg =
+let collect
+  (type space state data)
+  (module P : PoolType)
+  (module S : StateSpace
+    with type space = space and type state = state and type data = data)
+  space
+  ~start =
+  let pool = P.create () in
+  let visited = Hashtbl.create 100 in
+  let rec next () =
+    let s, d = P.take pool in
+    if Hashtbl.mem visited s then next () else s, d
+  in
+  let ds = ref [] in
+
+  let rec aux (s, d) =
+    Hashtbl.add visited s true;
+    if S.is_end space (s, d)
+    then ds := d :: !ds
+    else S.neighbors space (s, d) |> List.iter (P.add pool);
+    if not @@ P.is_empty pool then aux @@ next ()
+  in
+  aux (start, S.data_id); !ds
+
+type ('space, 'state, 'data, 'out) pathfind_alg =
   (module StateSpace
     with type space = 'space
      and type state = 'state
      and type data = 'data)
   -> 'space
   -> start: 'state
-  -> 'data
+  -> 'out
 
 let dfs
     (type space state data)
@@ -85,6 +112,18 @@ let bfs
     (module S : StateSpace
       with type space = space and type state = state and type data = data) =
   search (module QueuePool) (module S)
+
+let dfs_collect
+    (type space state data)
+    (module S : StateSpace
+      with type space = space and type state = state and type data = data) =
+  collect (module StackPool) (module S)
+
+let bfs_collect
+    (type space state data)
+    (module S : StateSpace
+      with type space = space and type state = state and type data = data) =
+  collect (module QueuePool) (module S)
 
 module type WeightType = sig
   include Heap.OrderedType
@@ -123,7 +162,7 @@ let dijkstra
 
   let rec aux (c, s, d) =
     Hashtbl.add visited s true;
-    if S.is_end space s then c, d
+    if S.is_end space (s, d) then c, d
     else begin
       S.neighbors space (s, d)
       |> List.map (fun (w, s', d') -> W.add c w, s', d')
