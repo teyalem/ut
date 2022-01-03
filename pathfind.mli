@@ -8,7 +8,14 @@ module type StateSpace = sig
   val neighbors : space -> state * data -> (state * data) list
 end
 
-type ('space, 'state, 'data, 'out) pathfind_alg
+type ('space, 'state, 'data, 'out) pathfind_alg =
+  (module StateSpace
+    with type space = 'space
+     and type state = 'state
+     and type data = 'data)
+  -> 'space
+  -> start: 'state
+  -> 'out
 
 val dfs : ('a, 'b, 'c, 'c) pathfind_alg
 val bfs : ('a, 'b, 'c, 'c) pathfind_alg
