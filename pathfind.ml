@@ -108,18 +108,13 @@ let dijkstra
                              and type weight = weight)
   space
   ~start =
-  let module O = struct
-    type t = W.t * state * data
-    let compare (a, _, _) (b, _, _) = W.compare a b
-  end
-  in
-  let module H = Pheap.Make(O) in
+  let module H = Pheap.Make(W) in
   let heap = ref @@ H.create () in
   let visited = Hashtbl.create 100 in
 
-  let add x = heap := H.insert !heap x in
+  let add (w, s, d) = heap := H.insert w (s, d) !heap in
   let rec next () =
-    let c, s, d = H.find_min !heap in
+    let c, (s, d) = H.find_min !heap in
     heap := H.delete_min !heap;
     if Hashtbl.mem visited s
     then next ()

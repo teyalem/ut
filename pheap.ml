@@ -3,41 +3,41 @@
 module type OrderedType = Heap.OrderedType
 
 module type S = sig
-  type elt
-  type t
+  type key
+  type 'a t
 
-  val create : unit -> t
-  val find_min : t -> elt
-  val insert : t -> elt -> t
-  val delete_min : t -> t
+  val create : unit -> 'a t
+  val find_min : 'a t -> key * 'a
+  val insert : key -> 'a -> 'a t -> 'a t
+  val delete_min : 'a t -> 'a t
 end
 
-module Make(Ord : OrderedType) : S with type elt = Ord.t =
+module Make(Ord : OrderedType) : S with type key = Ord.t =
 struct
-  type elt = Ord.t
-  type t =
+  type key = Ord.t
+  type 'a t =
     | Empty
-    | Tree of elt * t list
+    | Tree of { k: key; v: 'a; c: 'a t list }
 
   let create () = Empty
 
   let find_min = function
     | Empty -> failwith "Pheap.find_min"
-    | Tree (e, _) -> e
+    | Tree {k; v; _} -> k, v
 
   let meld a b =
     match a with
     | Empty -> b
-    | Tree (ea, ca) ->
+    | Tree {k=ka; v=va; c=ca} ->
       match b with
       | Empty -> a
-      | Tree (eb, cb) ->
-        if compare ea eb < 0
-        then Tree (ea, b::ca)
-        else Tree (eb, a::cb)
+      | Tree {k=kb; v=vb; c=cb} ->
+        if Ord.compare ka kb < 0
+        then Tree {k=ka; v=va; c = b::ca}
+        else Tree {k=kb; v=vb; c = a::cb}
 
-  let insert h e =
-    meld (Tree (e, [])) h
+  let insert k v h =
+    meld (Tree {k; v; c = []}) h
 
   let rec merge_pairs = function
     | [] -> Empty
@@ -47,6 +47,6 @@ struct
 
   let delete_min = function
     | Empty -> failwith "Pheap.delete_min"
-    | Tree (_, c) -> merge_pairs c
+    | Tree {c; _} -> merge_pairs c
 
 end
