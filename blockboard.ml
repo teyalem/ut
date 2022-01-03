@@ -2,14 +2,6 @@
 open Block
 open Cellautomata
 
-let neighbor_positions (x, y) =
-  let all_neighs =
-    [ -1, -1; 0, -1; 1, -1;
-      -1,  0;        1,  0;
-      -1,  1; 0,  1; 1,  1 ]
-  in
-  List.map (fun (dx, dy) -> x + dx, y + dy) all_neighs
-
 module type BoardType = sig
   include Block.S
   include HoneycombType
@@ -39,7 +31,7 @@ struct
   let set b (x, y) elt = set b x y elt
 
   let neighbors b pos =
-    neighbor_positions pos
+    Neigh.(neighbors moore pos)
     |> List.filter_map (get b)
 
   let iteri f b =

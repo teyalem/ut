@@ -41,6 +41,8 @@ module Heap = Heap
 
 module Pathfind = Pathfind
 
+module Neigh = Neigh
+
 (** {1 Modules for AoC 2020 } *)
 
 module Graph = Graph (** Graph *)

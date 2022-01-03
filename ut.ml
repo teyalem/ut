@@ -46,6 +46,7 @@ module Mat = Mat
 module Heap = Heap
 module Pheap = Pheap
 module Pathfind = Pathfind
+module Neigh = Neigh
 
 (* For AoC 2020 *)
 module Graph = Graph
