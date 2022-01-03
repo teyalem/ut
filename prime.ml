@@ -16,7 +16,7 @@ let is_prime n =
   else
     match
       for i = 3 to truncate @@ sqrt @@ float n do
-        if n mod i = 0 then raise Exit else ()
+        if n mod i = 0 then raise Exit
       done
     with () -> true
        | exception Exit -> false
