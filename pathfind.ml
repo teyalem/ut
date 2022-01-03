@@ -99,8 +99,6 @@ module type WeightedGraph = sig
   val neighbors : space -> state * data -> (weight * state * data) list
 end
 
-let heap_size = ref 100
-
 let dijkstra
   (type space state data weight)
   (module W : WeightType with type t = weight)
@@ -117,7 +115,7 @@ let dijkstra
   in
   let module H = Pheap.Make(O) in
   let heap = ref @@ H.create () in
-  let visited = Hashtbl.create !heap_size in
+  let visited = Hashtbl.create 100 in
 
   let add x = heap := H.insert !heap x in
   let rec next () =
