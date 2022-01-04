@@ -6,7 +6,7 @@ module type S = sig
   type key
   type 'a t
 
-  val create : unit -> 'a t
+  val empty : 'a t
   val find_min : 'a t -> key * 'a
   val insert : key -> 'a -> 'a t -> 'a t
   val delete_min : 'a t -> 'a t
@@ -19,7 +19,7 @@ struct
     | Empty
     | Tree of { k: key; v: 'a; c: 'a t list }
 
-  let create () = Empty
+  let empty = Empty
 
   let find_min = function
     | Empty -> failwith "Pheap.find_min"

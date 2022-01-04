@@ -150,7 +150,7 @@ let dijkstra
   space
   ~start =
   let module H = Pheap.Make(W) in
-  let heap = ref @@ H.create () in
+  let heap = ref H.empty in
   let visited = Hashtbl.create 100 in
 
   let add (w, s, d) = heap := H.insert w (s, d) !heap in
