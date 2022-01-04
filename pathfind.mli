@@ -1,3 +1,8 @@
+module type OrderedType = sig
+  type t
+  val compare : t -> t -> int
+end
+
 module type StateSpace = sig
   type space
   type state
@@ -9,13 +14,14 @@ module type StateSpace = sig
 end
 
 type ('space, 'state, 'data, 'out) pathfind_alg =
+  (module OrderedType with type t = 'state) ->
   (module StateSpace
     with type space = 'space
      and type state = 'state
-     and type data = 'data)
-  -> 'space
-  -> start: 'state
-  -> 'out
+     and type data = 'data) ->
+  'space ->
+  start: 'state ->
+  'out
 
 val dfs : ('a, 'b, 'c, 'c) pathfind_alg
 val bfs : ('a, 'b, 'c, 'c) pathfind_alg
@@ -23,7 +29,7 @@ val dfs_collect : ('a, 'b, 'c, 'c list) pathfind_alg
 val bfs_collect : ('a, 'b, 'c, 'c list) pathfind_alg
 
 module type WeightType = sig
-  include Heap.OrderedType
+  include OrderedType
   val zero : t
   val add : t -> t -> t
 end
@@ -36,11 +42,13 @@ module type WeightedGraph = sig
 end
 
 val dijkstra :
-  (module WeightType with type t = 'weight)
-  -> (module WeightedGraph with type space = 'space
-                            and type state = 'state
-                            and type data = 'data
-                            and type weight = 'weight)
-  -> 'space
-  -> start: 'state
-  -> 'weight * 'data
+  (module OrderedType with type t = 'state) ->
+  (module WeightType with type t = 'weight) ->
+  (module WeightedGraph
+    with type space = 'space
+     and type state = 'state
+     and type data = 'data
+     and type weight = 'weight) ->
+  'space ->
+  start: 'state ->
+  'weight * 'data
