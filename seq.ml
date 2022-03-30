@@ -111,17 +111,13 @@ let rec for_all pred seq =
   match seq () with
   | Nil -> true
   | Cons (x, f) ->
-    if pred x
-    then for_all pred f
-    else false
+    pred x && for_all pred f
 
 let rec exists pred seq =
   match seq () with
   | Nil -> false
   | Cons (x, f) ->
-    if pred x
-    then true
-    else exists pred f
+    pred x || exists pred f
 
 (* find first elements that meets the predicate from a sequence. *)
 let rec find_opt pred seq =
