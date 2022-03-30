@@ -8,7 +8,7 @@ module Make(Sign: SignType)
 struct
   type elt = Sign.t
   type pos = int * int
-  type t = (pos, elt) Hashtbl.t (* hashtable *)
+  type t = (pos, elt) Hashtbl.t
 
   let make len _ = Hashtbl.create len
 
