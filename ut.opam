@@ -9,7 +9,7 @@ homepage: "https://github.com/wiserlix/ut"
 bug-reports: "https://github.com/wiserlix/ut/issues"
 depends: [
   "dune" {>= "2.9"}
-  "ocaml" {>= "4.12"}
+  "ocaml" {>= "4.14.0"}
   "odoc" {with-doc}
 ]
 build: [

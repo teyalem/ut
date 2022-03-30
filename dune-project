@@ -11,4 +11,4 @@
 (package
   (name ut)
   (synopsis "Utilities for problem-solving")
-  (depends (ocaml (>= 4.12))))
+  (depends (ocaml (>= 4.14.0))))
