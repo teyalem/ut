@@ -9,11 +9,11 @@ type state = Running (* Running normally *)
 type t = { mutable pc: int; (* instruction pointer *)
            mutable rel_base: int; (* relative base register *)
            mutable state: state; (* state indicator *)
-           mutable interact: bool; (* interactive mode switch *)
-           mutable input: int Queue.t; (* Input queue *)
-           mutable output: int Queue.t; (* Output queue *)
-           mutable mem: int array; (* program memory *)
-           mutable ex_mem: (int, int) Hashtbl.t; } (* extended memory *)
+           mutable is_interactive: bool; (* interactive mode switch *)
+           input: int Queue.t; (* Input queue *)
+           output: int Queue.t; (* Output queue *)
+           mem: int array; (* program memory *)
+           ex_mem: (int, int) Hashtbl.t; } (* extended memory *)
 
 type program = int list
 
@@ -22,7 +22,7 @@ let load ns = { pc = 0;
                 rel_base = 0;
                 input = Queue.create ();
                 state = Paused;
-                interact = false;
+                is_interactive = false;
                 output = Queue.create ();
                 mem = Array.of_list ns;
                 ex_mem = Hashtbl.create 100; }
@@ -32,7 +32,7 @@ let copy m = { pc = m.pc;
                rel_base = m.rel_base;
                input = Queue.copy m.input;
                state = m.state;
-               interact = m.interact;
+               is_interactive = m.is_interactive;
                output = Queue.create ();
                mem = Array.copy m.mem;
                ex_mem = Hashtbl.copy m.ex_mem; }
@@ -44,7 +44,7 @@ let is_halt m = m.state = Halt
 let code_length m = Array.length m.mem
 
 (* switch interactive mode *)
-let set_interactive m b = m.interact <- b
+let set_interactive m b = m.is_interactive <- b
 
 (*
  * I/O
@@ -179,8 +179,7 @@ let rec run m =
   while m.state = Running do
     step m;
 
-    if m.interact && not @@ is_output_empty m
-    then
+    if m.is_interactive && not @@ is_output_empty m then
       let output = pop_output m in
       try char_of_int output |> print_char
       with _ -> begin
@@ -189,10 +188,8 @@ let rec run m =
         end
   done;
 
-  if m.interact && m.state = Paused
-  then begin
-    read_line ()
-    |> (fun s -> s ^ "\n")
+  if m.is_interactive && m.state = Paused then begin
+    read_line () ^ "\n"
     |> String.iter (fun c -> push_input m @@ int_of_char c);
     run m
   end
