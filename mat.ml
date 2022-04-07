@@ -48,7 +48,7 @@ let sub mat (sx, sy) (lenx, leny) =
   sub mat sx lenx |> map (fun a -> sub a sy leny)
 
 let transpose mat =
-  init (dimx mat) (dimy mat) (fun x y -> get mat y x)
+  init (dimy mat) (dimx mat) (fun x y -> get mat y x)
 
 let concat_horiz mats =
   assert(mats <> []);
