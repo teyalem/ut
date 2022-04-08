@@ -10,6 +10,9 @@ val is_halt : t -> bool
 
 val code_length : t -> int
 
+val peek : t -> int -> int
+val poke : t -> int -> int -> unit
+
 val set_interactive : t -> bool -> unit
 
 val is_output_empty : t -> bool

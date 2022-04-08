@@ -43,6 +43,16 @@ let is_halt m = m.state = Halt
 (* return length of loaded code *)
 let code_length m = Array.length m.mem
 
+let peek m i =
+  if i < code_length m
+  then m.mem.(i)
+  else Hashtbl.find_opt m.ex_mem i |> Option.value ~default: 0
+
+let poke m i v =
+  if i < code_length m
+  then m.mem.(i) <- v
+  else Hashtbl.replace m.ex_mem i v
+
 (* switch interactive mode *)
 let set_interactive m b = m.is_interactive <- b
 
