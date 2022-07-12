@@ -44,7 +44,7 @@ val concat_horiz : 'a t list -> 'a t
 (** concatenate vertically. *)
 val concat_vert : 'a t list -> 'a t
 
-(** concatenate. *)
+(** concatenate y major list. *)
 val concat : 'a t list list -> 'a t
 
 (** {1 Map} *)

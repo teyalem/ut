@@ -3,9 +3,15 @@ module type OrderedType = sig
   val compare : t -> t -> int
 end
 
+(** module signiture for statespace *)
 module type StateSpace = sig
+  (** space of states *)
   type space
+
+  (** state of the problem *)
   type state
+
+  (** data you want to get *)
   type data
 
   val data_id : data
